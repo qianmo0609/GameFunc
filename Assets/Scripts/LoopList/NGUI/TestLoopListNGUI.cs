@@ -33,7 +33,7 @@ public class TestLoopListNGUI : MonoBehaviour
         //这是列表第一项位置
         startPosY = uiPanel.height / 2 + this.transform.position.y;
         topY = grid.transform.TransformPoint(new Vector3(0, uiPanel.height / 2 + this.transform.position.y + itemHeight, 0));
-        bottomY = grid.transform.TransformPoint(new Vector3(0, this.transform.position.y - uiPanel.height / 2 + itemHeight, 0));
+        bottomY = grid.transform.TransformPoint(new Vector3(0, this.transform.position.y - uiPanel.height / 2, 0));
         isDrag = false;
         // 初始化数据列表，这里简单示例为数字 0 到 itemCount - 1
         for (int i = 0; i < itemCount; i++)
