@@ -27,6 +27,8 @@ public class TestLoopListNGUI : MonoBehaviour
     float lastPosition;
     float startPosY;
 
+    UIButton btnTest;
+
     void Start()
     {
         UIPanel uiPanel = this.GetComponent<UIPanel>();
@@ -50,6 +52,11 @@ public class TestLoopListNGUI : MonoBehaviour
         // ¼àÌý¹ö¶¯ÊÂ¼þ
         scrollView.onDragStarted = onDragStart;
         scrollView.onDragFinished = onDragEnd;
+    }
+
+    void Test()
+    {
+
     }
 
     void onDragStart()

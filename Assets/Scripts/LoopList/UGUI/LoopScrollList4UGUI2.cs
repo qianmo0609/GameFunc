@@ -21,6 +21,10 @@ public class LoopScrollList4UGUI2 : MonoBehaviour
     // 列表项对象池，用于复用
     private Queue<GameObject> itemPool = new Queue<GameObject>();
 
+    private float topY;
+    private float bottomY;
+    private int currentIdx;
+
     void Start()
     {
         // 初始化数据列表，这里简单生成一些数据
@@ -32,6 +36,10 @@ public class LoopScrollList4UGUI2 : MonoBehaviour
         // 计算可见区域内可容纳的最大列表项数量
         visibleItemCount = Mathf.FloorToInt(scrollRect.viewport.rect.height / itemHeight) + 1;
 
+        topY = content.anchoredPosition.y + itemHeight;
+
+        currentIdx = 0;
+
         // 初始化显示的列表项
         InitializeVisibleItems();
 
@@ -42,7 +50,7 @@ public class LoopScrollList4UGUI2 : MonoBehaviour
     // 初始化显示的列表项
     void InitializeVisibleItems()
     {
-        for (int i = 0; i < visibleItemCount; i++)
+        for (int i = 0; i < visibleItemCount + 1; i++)
         {
             GameObject item = GetItemFromPool();
             item.transform.SetParent(content, false);
@@ -81,26 +89,22 @@ public class LoopScrollList4UGUI2 : MonoBehaviour
     // 滚动事件处理函数
     void OnScroll(Vector2 scrollPosition)
     {
-        // 计算当前显示区域的起始索引
-        int startIndex = Mathf.FloorToInt(-content.anchoredPosition.y / itemHeight);
+        float currentY = content.anchoredPosition.y;
 
-        // 处理向上滚动
-        if (scrollPosition.y > 0 && startIndex > 0)
+        // 上移超出一个位置时的处理
+        // 向上滚动
+        if (currentY > itemHeight)
         {
-            while (startIndex > 0)
-            {
-                MoveLastItemToTop();
-                startIndex--;
-            }
+            Transform firstItem = content.GetChild(0);
+            firstItem.SetAsLastSibling();
+            content.anchoredPosition = new Vector2(content.anchoredPosition.x, content.anchoredPosition.y - itemHeight);
         }
-        // 处理向下滚动
-        else if (scrollPosition.y < 0 && startIndex + visibleItemCount < dataList.Count)
+        // 下移低于一个位置时的处理
+        else if (currentY < 0)
         {
-            while (startIndex + visibleItemCount < dataList.Count)
-            {
-                MoveFirstItemToBottom();
-                startIndex++;
-            }
+            Transform lastItem = content.GetChild(content.childCount - 1);
+            lastItem.SetAsFirstSibling();
+            content.anchoredPosition = new Vector2(content.anchoredPosition.x, content.anchoredPosition.y + itemHeight);
         }
     }
 
