@@ -1,0 +1,22 @@
+// Visibility.compute
+#pragma kernel CheckVisibility
+
+RWStructuredBuffer<float3> Positions;
+RWStructuredBuffer<bool> Results;
+float3 ViewerPos;
+float MaxDistance;
+float ViewAngle;
+
+[numthreads(64, 1, 1)]
+void CheckVisibility(uint3 id : SV_DispatchThreadID)
+{
+    float3 dir = Positions[id.x] - ViewerPos;
+    float distance = length(dir);
+    dir = normalize(dir);
+    
+    float angle = degrees(acos(dot(float3(0, 0, 1), dir)));
+    bool angleValid = angle < ViewAngle / 2;
+    bool distanceValid = distance < MaxDistance;
+    
+    Results[id.x] = angleValid && distanceValid;
+}
